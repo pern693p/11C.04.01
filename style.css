@@ -1,7 +1,6 @@
 /* GENERAL */
 
 html {
-  background-color: rgb(128, 128, 128);
 }
 
 header {
@@ -11,25 +10,23 @@ header {
 
 h1 {
   font-size: 50px;
-  font-family: "Courier New", Courier, monospace;
   margin-top: 50px;
 }
 
 h2 {
   font-size: 20px;
-  font-family: cursive;
+
   font-weight: 500;
 }
 
 p {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /* STUDENTLIST */
 
 #list {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 5vw;
 }
 
