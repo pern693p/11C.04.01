@@ -40,8 +40,18 @@ p {
   justify-content: space-between;
   display: flex;
   flex-direction: column;
+  opacity: 1;
+  transition: opacity 0.5s ease;
 }
 
+.student img,
+.student button {
+  cursor: pointer;
+}
+
+.student.hide-animation {
+  opacity: 0;
+}
 /* SORTING AND FILTERING */
 
 #selectors {
@@ -93,9 +103,7 @@ button {
   position: fixed;
   top: 50px;
   left: 50px;
-
   z-index: 1;
-
   background-color: rgba(209, 178, 132, 0.9);
   transition: 0.5s;
   display: none;
@@ -119,8 +127,6 @@ button {
   font-size: 20px;
  
 }
-
-
 
 #total_houses {
   display: flex;
