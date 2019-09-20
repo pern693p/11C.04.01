@@ -1,9 +1,7 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", startStudentList);
-document
-  .querySelector("#house_picker")
-  .addEventListener("change", showStudents);
+document.querySelector("#house_picker").addEventListener("change", filterHouse);
 
 //Sort-by dropdown
 document.querySelectorAll("#sort-by").forEach(option => {
@@ -13,6 +11,7 @@ document.querySelectorAll("#sort-by").forEach(option => {
 let allStudentsData = [];
 let cleanStudentsData = [];
 let sort;
+let house = "All";
 
 //   get json
 function startStudentList() {
@@ -121,6 +120,8 @@ function cleanData(allStudentsData) {
   });
 
   showStudents(cleanStudentsData);
+  showAmountOfStudents();
+  showHouseNumbers(cleanStudentsData);
 }
 
 const studentData = {
@@ -134,71 +135,61 @@ const studentData = {
 
 // FILTERING VIRKER IKKE ENDNU
 
-function showStudents(cleanStudentsData) {
-  let selectedHouse = document.querySelector("#house_picker").value;
+function showStudents(students) {
   let studentListElement = document.querySelector("#list");
   studentListElement.innerHTML = "";
 
-  if (selectedHouse === "All") {
-    cleanStudentsData.forEach(student => {
-      studentListElement.innerHTML += `
-<div class="student">
-<img src=${student.pictureName}>
-    <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>
-    <p>${student.house}</p>
+  students.forEach(student => {
+    let template = `
+      <div class="student">
+      <img src=${student.pictureName}>
+          <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>
+          <p>${student.house}</p>
+      </div>`;
+    studentListElement.insertAdjacentHTML("beforeend", template);
+    studentListElement.lastElementChild.addEventListener("click", openStudent);
 
-</div>`;
-    });
-  } else {
-    let filteredStudents = studentsInHouse(selectedHouse);
-    filteredStudents.forEach(filterStudent => {
-      studentListElement.innerHTML += `
-<div class="student">
-<img src=${filterStudent.pictureName}>
-    <h2>${filterStudent.firstName} ${filterStudent.middleName} ${filterStudent.lastName}</h2>
-    <p>${filterStudent.house}</p>
+    function openStudent() {
+      document.querySelector(".popup_content").innerHTML = `
+                            <div class="student">
+                            <img src=${student.pictureName}>
+                <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>
+                <p>${student.house}</p>
+                                </div>
+                            `;
 
-</div>`;
-    });
-  }
-}
-
-let selectedHouse = document.querySelector("#house_picker").value;
-let studentListElement = document.querySelector("#list");
-studentListElement.innerHTML = "";
-
-if (selectedHouse === "All") {
-  cleanStudentsData.forEach(student => {
-    showStudent(student);
-  });
-} else {
-  let filteredStudents = studentsInHouse(selectedHouse);
-  filteredStudents.forEach(filterStudent => {
-    showStudent(filterStudent);
+      document.querySelector(
+        "#popup"
+      ).style.backgroundImage = `url(img/${student.house}_house.png)`;
+      document.querySelector("#popup").style.display = "block";
+      document.querySelector("#close").style.display = "block";
+      document.querySelector("#close").addEventListener("click", () => {
+        document.querySelector("#popup").style.display = "none";
+        document.querySelector("#close").style.display = "none";
+      });
+    }
   });
 }
 
-function studentsInHouse(selectedHouse) {
+function filterHouse() {
+  house = this.value;
+
+  studentsInHouse(house);
+}
+
+function studentsInHouse(house) {
   const students = cleanStudentsData.filter(filterFunction);
 
   function filterFunction(student) {
-    if (student.house === selectedHouse) {
+    if (student.house === house) {
+      return true;
+    } else if (house === "All") {
       return true;
     } else {
       return false;
     }
   }
-  return students;
-}
-
-function showStudent(student) {
-  let studentListElement = document.querySelector("#list");
-
-  studentListElement.innerHTML += `
-    <div class="student">
-      <h2>${student.fullname}</h2>
-      <p>${student.house}</p>
-    </div>`;
+  showStudents(students);
 }
 
 function sortBy() {
@@ -235,15 +226,35 @@ function sortBy() {
   showStudents(cleanStudentsData);
 }
 
-function studentsInHouse(selectedHouse) {
-  const students = cleanStudentsData.filter(filterFunction);
+function showAmountOfStudents() {
+  document.querySelector(
+    "#total"
+  ).innerHTML = `Total number of students: ${cleanStudentsData.length}`;
+}
 
-  function filterFunction(student) {
-    if (student.house === selectedHouse) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  return students;
+function showHouseNumbers(cleanStudentsData) {
+  let gryffindor = cleanStudentsData.filter(obj =>
+    obj.house.includes("Gryffindor")
+  );
+  let hufflepuff = cleanStudentsData.filter(obj =>
+    obj.house.includes("Hufflepuff")
+  );
+  let slytherin = cleanStudentsData.filter(obj =>
+    obj.house.includes("Slytherin")
+  );
+  let ravenclaw = cleanStudentsData.filter(obj =>
+    obj.house.includes("Ravenclaw")
+  );
+  document.querySelector(
+    "#total_gryffindor"
+  ).innerHTML = `Gryffindor: ${gryffindor.length}`;
+  document.querySelector(
+    "#total_hufflepuff"
+  ).innerHTML = `Hufflepuff: ${hufflepuff.length}`;
+  document.querySelector(
+    "#total_slytherin"
+  ).innerHTML = `Slytherin: ${slytherin.length}`;
+  document.querySelector(
+    "#total_ravenclaw"
+  ).innerHTML = `Ravenclaw: ${ravenclaw.length}`;
 }

@@ -7,9 +7,17 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+<header>
+  <h1>Hogwarts studentlist</h1>
+</header>
+
   <body>
+
+ 
+<div id="selectors">
     <label id="house-selector">
       <select name="house_picker" id="house_picker">
+        <option value="FilterByHouse">Filter by house</option>
         <option value="All">All</option>
         <option value="Hufflepuff">Hufflepuff</option>
         <option value="Gryffindor">Gryffindor</option>
@@ -18,14 +26,51 @@
       </select>
     </label>
 
-    <label for="#sort-by">Sort by</label>
+
+<label id="expelled-selector">
+  <select name="expelled_picker" id="expelled_picker">
+<option value="FilterByStudents">Filter students by</option>
+      <option value="All">All students</option>
+    <option value="expelled"> Expelled students
+    </option>
+    <option value="notExpelled">Not expelled students</option>
+  </select>
+</label>
+
+
+    <label for="#sort-by">
     <select id="sort-by">
-      <option value="none">None</option>
+      <option value="SortStudents">Sort students by</option>
       <option value="Firstname">Firstname</option>
       <option value="Lastname">Lastname</option>
       <option value="House">House</option>
     </select>
+  </label>
+</div>
+
+
     <div id="list"></div>
+
+    <div id="popup">
+      <div id="close">&times;</div>
+      <div class="popup_content"></div>
+    </div>
+
+
+    <div id="student_amount">
+      <div id="total">Total number of students:</div>
+      <div id="total_expelled">Total number of expelled students:</div>
+      <div id="total_perhouse">Total students per house:</div>
+      <div id="total_houses">
+        <div id="total_hufflepuff">0</div>
+        <div id="total_gryffindor">0</div>
+        <div id="total_ravenclaw">0</div>
+        <div id="total_slytherin">0</div>
+      </div>
+    </div>
+  </div>
+
+
 
     <script src="script.js"></script>
   </body>

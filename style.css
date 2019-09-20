@@ -6,6 +6,7 @@ html {
 header {
   display: flex;
   justify-content: center;
+
 }
 
 h1 {
@@ -26,8 +27,9 @@ p {
 
 #list {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   margin: 5vw;
+  padding: 5vw; 
 }
 
 .student {
@@ -42,15 +44,27 @@ p {
 
 /* SORTING AND FILTERING */
 
+#selectors {
+  display: flex; 
+  justify-content: center; 
+   
+
+}
+
+select { 
+  margin-right: 20px; 
+  font-size: 30px;
+}
+
 .options {
   display: flex;
-  flex-direction: row;
+ 
   justify-content: space-around;
   margin: 10px 500px;
 }
 
 button {
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 
   font-size: 20px;
   border: none;
   background-color: inherit;
@@ -74,41 +88,42 @@ button {
 /* POPUP */
 
 #popup {
-  width: 70vw;
-  height: 85vh;
+  height: 400px;
+  width: 400px;
   position: fixed;
-  background-color: white;
-  border: 2px solid black;
+  top: 50px;
+  left: 50px;
+
+  z-index: 1;
+
+  background-color: rgba(209, 178, 132, 0.9);
+  transition: 0.5s;
   display: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
-#indhold {
-  box-sizing: border-box;
-  width: 60vw;
-  height: 70vh;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: fixed;
+.popup_content .student {
+  background-color: inherit;
+}
+#close {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+  cursor: pointer;
+  display: none;
 }
 
-#indhold h2 {
-  font-size: 30px;
+#student_amount {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+ 
 }
 
-#luk {
-  box-sizing: border-box;
-  text-align: right;
-}
 
-#luk button {
-  font-size: 2em;
-  background-color: white;
-  border: none;
-  cursor: grab;
-  padding: 0px;
-  margin-right: 15px;
+
+#total_houses {
+  display: flex;
+  flex-direction: row;
+  justify-content: left; 
 }
