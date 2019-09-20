@@ -1,18 +1,16 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", startStudentList);
-document.querySelector("#house_picker").addEventListener("change", filterHouse);
 document.querySelector("#sort_by").addEventListener("change", sortBy);
-document.querySelector("#expelled_picker").addEventListener("change", filterExpelled);
-
+document.querySelector("#house_picker").addEventListener("change", function() { studentsInHouse(this.value); });
+document.querySelector("#expelled_picker").addEventListener("change", function() { expelledStudentsInHouse(this.value); });
 
 let allStudentsData = [];
 let cleanStudentsData = [];
 let filteredStudentsData = [];
-let notExpelledStudentsData = [];
-let ExpelledStudentsData = [];
 let housePickedValue = "All";
 let isExpelledValue = "All";
+let amountOfExpelledStudents = 0;
 
 const studentData = {
   firstName: "",
@@ -22,8 +20,16 @@ const studentData = {
   house: "",
   pictureName: "",
   studentId: "",
-  expelled: "",
+  isExpelled: "",
+  expellable: ""
 };
+
+const pernilleData = {
+  "fullname" : "Pernille Geek Nerd",
+  "gender" : "girl", 
+  "house" : "Slytherin",
+  "expellable" : "false"
+}
 
 //   get json
 function startStudentList() {
@@ -38,10 +44,10 @@ function startStudentList() {
 }
 
 function cleanData(allStudentsData) {
+  allStudentsData.push(pernilleData);
   allStudentsData.forEach(function (jsonObject, index) {
     const cleanStudent = Object.create(studentData);
     const fullnametrim = jsonObject.fullname.trim();
-
     let studentNames = fullnametrim.split(" ");
     let firstName = studentNames[0];
 
@@ -74,13 +80,18 @@ function cleanData(allStudentsData) {
 
       // MANGLER NICKNAME "ERNIE"
     }
-    cleanStudent.studentId = index;
-    cleanStudent.expelled = "false";
+    
+    if (jsonObject.expellable == undefined) {
+      cleanStudent.expellable = "true";  
+    } else {
+      cleanStudent.expellable = jsonObject.expellable;
+    }
 
     const housetrim = jsonObject.house.trim();
     let house = housetrim;
     house = house.substring(0, 1).toUpperCase() + house.slice(1).toLowerCase();
     cleanStudent.house = house;
+    cleanStudent.studentId = index;
 
     let studentPhotoName = studentNames[0].substring(0, 1).png;
 
@@ -128,9 +139,8 @@ function cleanData(allStudentsData) {
     }
 
     cleanStudentsData.push(cleanStudent);
+    console.log(cleanStudent)
   });
-
-  notExpelledStudentsData = cleanStudentsData;
 
   showStudents(cleanStudentsData);
   showAmountOfStudents();
@@ -148,7 +158,7 @@ function showStudents(students) {
         <img class="studentImage" src=${student.pictureName}>
         <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>
         <p>${student.house}</p>
-        <p>Is expelled:${student.expelled}</p>
+        <p>Is expelled:${student.isExpelled}</p>
         <button id="expell" type="button">Expell this student!</button>
       </div>`;
     studentListElement.insertAdjacentHTML("beforeend", template);
@@ -181,26 +191,21 @@ function popupStudent(student){
 }
 
 function expellStudent(student){
-  // notExpelledStudentsData.splice(student.studentId, 1); 
-  // ExpelledStudentsData.push(student.studentId, 1);
-  student.expelled = "true"; 
-  console.log(student);
+  if (student.expellable == "true") {
 
-  document.getElementById(student.studentId).classList.toggle("hide-animation")
-  setTimeout(function(){
-    let elem = document.getElementById(student.studentId);
-    elem.parentNode.removeChild(elem);
-  }, 1000);
-}
+    student.isExpelled = "true"; 
+    amountOfExpelledStudents = amountOfExpelledStudents += 1;
+    document.querySelector("#total_expelled").innerHTML = `Total number of expelled students: ${amountOfExpelledStudents}`;
 
-function filterHouse() {
-  housePickedValue = this.value;
-  studentsInHouse(housePickedValue);    
-}
-
-function filterExpelled() {
-  isExpelledValue = this.value;
-  expelledStudentsInHouse(isExpelledValue); 
+    document.getElementById(student.studentId).classList.toggle("hide-animation")
+    setTimeout(function(){
+      let elem = document.getElementById(student.studentId);
+      elem.parentNode.removeChild(elem);
+    }, 1000);
+  
+  } else {
+    alert("Cannot be expelled! Too much of a Geek");
+  }
 }
 
 function studentsInHouse(housePickedValue) {
@@ -224,7 +229,7 @@ function expelledStudentsInHouse(isExpelledValue) {
     filteredStudentsData = students;
     
     function filterFunction(student) {
-      if (student.expelled === isExpelledValue) {
+      if (student.isExpelled === isExpelledValue) {
         return true;
       } else if (isExpelledValue === "All") {
         return true;
@@ -300,5 +305,4 @@ function showHouseNumbers(cleanStudentsData) {
   document.querySelector("#total_hufflepuff").innerHTML = `Hufflepuff: ${hufflepuff.length}`;
   document.querySelector("#total_slytherin").innerHTML = `Slytherin: ${slytherin.length}`;
   document.querySelector("#total_ravenclaw").innerHTML = `Ravenclaw: ${ravenclaw.length}`;
-  // document.querySelector("#total_expelled").innerHTML = `${ravenclaw.length}`;
 }
