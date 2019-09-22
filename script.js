@@ -187,7 +187,7 @@ function showStudents(students) {
         <p>House: ${student.house}</p>
         <p>Blood type: ${student.bloodType}</p>
         <button id="expell" type="button" class="expelled-${student.isExpelled}">${student.isExpelled ? "Expelled" : "Expell student"}</button>
-        <button id="squad" type="button" class="in-squad-${student.isInSquad}">${student.isInSquad ? "Remove from squad" : "Put in squad"}</button>
+        <button id="squad" type="button" class="in-squad-${student.isInSquad}">${student.isInSquad ? "Remove from" : "Put in squad"}</button>
         <button id="prefect" type="button" class="prefect-${student.isPrefect}">${student.isPrefect ? "Remove as Prefect" : "Make prefect"}</button>
       </div>`;
     studentListElement.insertAdjacentHTML("beforeend", template);
@@ -251,7 +251,7 @@ function expellStudent(student) {
 }
 
 function addOrRemoveStudentFromSquad(student) {
-  if ((student.bloodType === "Pureblood") || (student.house === "Slytherin" && student.bloodType === "Pureblood")) {
+  if ((student.bloodTypex$ === "Pureblood") || (student.house === "Slytherin")) {
     let house_picker = document.querySelector("#house_picker");
     let value = house_picker.value;
 
@@ -265,10 +265,10 @@ function addOrRemoveStudentFromSquad(student) {
     } else {
       showStudents(cleanStudentsData);
     }
+    showStudentsData(cleanStudentsData);
   } else {
     alertUser('Only pure blood or pure blood from house Slytherin is allowed in squad')
   }
-  showStudentsData(cleanStudentsData);
 }
 
 function addorRemoveStudentPrefect(newPrefectStudent) {
