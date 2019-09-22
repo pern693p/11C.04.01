@@ -23,7 +23,7 @@ const studentData = {
   studentId: "",
   isExpelled: false,
   isExpellable: true,
-  isPrefect: "false",
+  isPrefect: false,
   isInSquad: false,
   bloodType: ""
 };
@@ -34,7 +34,7 @@ const pernilleData = {
   "house" : "Slytherin",
   "isExpelled" : false,
   "isExpellable" : false,
-  "isPrefect": "false",
+  "isPrefect": false,
   "isInSquad": false,
   "bloodType" : "Pureblood"
 }
@@ -62,8 +62,6 @@ function cleanData(allStudentsData) {
   allStudentsData.push(pernilleData);
   
   allStudentsData.forEach(function (jsonObject, index) {
-
-
     const cleanStudent = Object.create(studentData);
     const fullnametrim = jsonObject.fullname.trim();
     let studentNames = fullnametrim.split(" ");
@@ -112,6 +110,7 @@ function cleanData(allStudentsData) {
     cleanStudent.house = house;
     cleanStudent.isExpelled = false;
     cleanStudent.isInSquad = false;
+    cleanStudent.isPrefect = false;
     cleanStudent.studentId = index;
 
     let studentPhotoName = studentNames[0].substring(0, 1).png;
@@ -175,7 +174,6 @@ function cleanData(allStudentsData) {
   showStudentsData(cleanStudentsData);
 }
 
-
 function showStudents(students) {
   let studentListElement = document.querySelector("#list");
   studentListElement.innerHTML = "";
@@ -184,12 +182,13 @@ function showStudents(students) {
     let studentHouseClass = student.house.toLowerCase();
     let template = `
       <div id="${student.studentId}" class="student ${studentHouseClass}">
+        <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>  
         <img class="studentImage" src=${student.pictureName}>
-        <h2>${student.firstName} ${student.middleName} ${student.lastName}</h2>
         <p>House: ${student.house}</p>
         <p>Blood type: ${student.bloodType}</p>
         <button id="expell" type="button" class="expelled-${student.isExpelled}">${student.isExpelled ? "Expelled" : "Expell student"}</button>
-        <button id="squad" type="button" class="in-squad-${student.isInSquad}">${student.isInSquad ? "Remove" : "Put in squad"}</button>
+        <button id="squad" type="button" class="in-squad-${student.isInSquad}">${student.isInSquad ? "Remove from squad" : "Put in squad"}</button>
+        <button id="prefect" type="button" class="prefect-${student.isPrefect}">${student.isPrefect ? "Remove as Prefect" : "Make prefect"}</button>
       </div>`;
     studentListElement.insertAdjacentHTML("beforeend", template);
     studentListElement.lastElementChild.addEventListener("click", function(event) {
@@ -202,13 +201,18 @@ function showStudents(students) {
     });
     studentListElement.lastElementChild.querySelector("#squad").addEventListener("click", () => {
       event.stopPropagation();
-      addOrRemoveFromSquad(student);
+      addOrRemoveStudentFromSquad(student);
+    });
+    studentListElement.lastElementChild.querySelector("#prefect").addEventListener("click", () => {
+      event.stopPropagation();
+      addorRemoveStudentPrefect(student);
     });
   });
 }
 
 function openPopup(student){
   let popUpElement = document.querySelector("#popup");
+  let overlayElement = document.querySelector("#overlay");
   let studentHouseClass = student.house.toLowerCase();
 
   popUpElement.querySelector(".popup_wrapper").innerHTML = `
@@ -220,8 +224,10 @@ function openPopup(student){
     <div id="close">&times;</div>
   `;
   popUpElement.style.display = "block";
+  overlayElement.style.display = "block";
   popUpElement.querySelector("#close").addEventListener("click", () => {
     popUpElement.style.display = "none";
+    overlayElement.style.display = "none";
   });
 }
 
@@ -244,7 +250,7 @@ function expellStudent(student) {
   }
 }
 
-function addOrRemoveFromSquad(student) {
+function addOrRemoveStudentFromSquad(student) {
   if ((student.bloodType === "Pureblood") || (student.house === "Slytherin" && student.bloodType === "Pureblood")) {
     let house_picker = document.querySelector("#house_picker");
     let value = house_picker.value;
@@ -261,6 +267,42 @@ function addOrRemoveFromSquad(student) {
     }
   } else {
     alertUser('Only pure blood or pure blood from house Slytherin is allowed in squad')
+  }
+  showStudentsData(cleanStudentsData);
+}
+
+function addorRemoveStudentPrefect(newPrefectStudent) {
+  let house_picker = document.querySelector("#house_picker");
+  let value = house_picker.value;
+  
+  if (newPrefectStudent.isPrefect === false) {
+    let prefects = cleanStudentsData.filter(student => {
+      if (student.house === newPrefectStudent.house) {
+        if (student.isPrefect === true) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (prefects.length < 2) {
+      newPrefectStudent.isPrefect = true;
+    } else {
+      let error_string = "There are already two prefects in this house, you must remove one before adding a new one: ";
+      prefects.forEach(prefect => {
+        error_string += prefect.firstName;
+        error_string += ", ";
+      });
+      alertUser(error_string);
+    }
+  } else {
+    newPrefectStudent.isPrefect = false; 
+  }
+  
+  if (value !== "none") {
+    studentsInHouse(value);
+  } else {
+    showStudents(cleanStudentsData);
   }
 }
 
@@ -297,6 +339,7 @@ function expelledStudentsInHouse(isExpelledValue) {
   }
 
 function sortBy() {
+  let sort = this.value;
   let sortData; 
 
   if(filteredStudentsData == null || filteredStudentsData.length === 0) {
@@ -305,34 +348,20 @@ function sortBy() {
     sortData = filteredStudentsData;
   }
 
-  // Change filter
-  let sort = this.value;
-
   // If statement to sort by choice
   if (sort == "Firstname") {
-    console.log(sort);
-    // Function to sort by firstname
-
     sortData.sort(function(a, b) {
       return a.firstName.localeCompare(b.firstName);
     });
   } else if (sort == "Lastname") {
-    console.log(sort);
     sortData.sort(function(a, b) {
       return a.lastName.localeCompare(b.lastName);
     });
   } else if (sort == "House") {
-    console.log(sort);
     sortData.sort(function(a, b) {
       return a.house.localeCompare(b.house);
     });
-
-    // Reset sort
-  } else if (sort == "none") {
-    // Call start function
-    startStudentList();
-  }
-  // Call function to show studentlist again
+  } 
   showStudents(sortData);
 }
 
@@ -340,12 +369,14 @@ function showStudentsData(cleanStudentsData) {
   let totalStudentsElement = document.querySelector("#total_students");
   let totalExpelledStudentsElement = document.querySelector("#total_expelled");
   let totalNotExpelledStudentsElement = document.querySelector("#total_not_expelled");
+  let totalStudentsInSquadElement = document.querySelector("#total_squad");
 
   let gryffindor = cleanStudentsData.filter(obj => obj.house.includes("Gryffindor"));
   let hufflepuff = cleanStudentsData.filter(obj => obj.house.includes("Hufflepuff"));
   let slytherin = cleanStudentsData.filter(obj => obj.house.includes("Slytherin"));
   let ravenclaw = cleanStudentsData.filter(obj => obj.house.includes("Ravenclaw"));
-  
+  let squadCount = cleanStudentsData.filter(obj => obj.isInSquad == true);
+
   document.querySelector("#total_gryffindor").innerHTML = `Gryffindor: ${gryffindor.length}`;
   document.querySelector("#total_hufflepuff").innerHTML = `Hufflepuff: ${hufflepuff.length}`;
   document.querySelector("#total_slytherin").innerHTML = `Slytherin: ${slytherin.length}`;
@@ -354,6 +385,7 @@ function showStudentsData(cleanStudentsData) {
   totalExpelledStudentsElement.innerHTML = `Total number of expelled students: ${amountOfExpelledStudents}`;
   totalNotExpelledStudentsElement.innerHTML = `Total number of not expelled students: ${cleanStudentsData.length - amountOfExpelledStudents}`;
   totalStudentsElement.innerHTML = `Total number of students: ${cleanStudentsData.length}`;
+  totalStudentsInSquadElement.innerHTML = `Total number of students in Squad: ${squadCount.length}`;  
 };
 
 function alertUser(message) {
