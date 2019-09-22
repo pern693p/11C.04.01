@@ -14,7 +14,7 @@
     <div id="selectors">
       <label id="house_selector">
         <select name="house_picker" id="house_picker">
-          <option value="FilterByHouse">Filter by house</option>
+          <option value="none">Filter by house</option>
           <option value="All">All</option>
           <option value="Hufflepuff">Hufflepuff</option>
           <option value="Gryffindor">Gryffindor</option>
@@ -24,15 +24,14 @@
       </label>
     <label id="expelled_selector">
       <select name="expelled_picker" id="expelled_picker">
-        <option value="FilterByStudents">Filter students by</option>
-        <option value="All">All students</option>
+        <option value="none">Filter students by</option>
         <option value="true"> Expelled students</option>
         <option value="false">Not expelled students</option>
       </select>
     </label>
     <label for="sort_by">
       <select id="sort_by">
-        <option value="SortStudents">Sort students by</option>
+        <option value="none">Sort students by</option>
         <option value="Firstname">Firstname</option>
         <option value="Lastname">Lastname</option>
         <option value="House">House</option>
@@ -41,19 +40,19 @@
   </div>
   <div id="list"></div>
   <div id="popup">
-    <div id="close">&times;</div>
-    <div class="popup_content"></div>
+    <div class="popup_wrapper">
+    </div>
   </div>
   <div id="student_amount">
-    <div id="total">Total number of students:</div>
-    <div id="total_expelled">Total number of expelled students:</div>
-    <div id="total_perhouse">Total students per house:</div>
-    <div id="total_houses">
-      <div id="total_hufflepuff">0</div>
-      <div id="total_gryffindor">0</div>
-      <div id="total_ravenclaw">0</div>
-      <div id="total_slytherin">0</div>
-    </div>
+    <div id="total_students"></div>
+    <div id="total_expelled"></div>
+    <div id="total_not_expelled"></div>
+    <div id="total_perhouse"></div>
+    <div id="total_houses"></div>
+    <div id="total_gryffindor"></div>
+    <div id="total_hufflepuff"></div>
+    <div id="total_slytherin"></div>
+    <div id="total_ravenclaw"></div>
   </div>
   <script src="script.js"></script>
   </body>

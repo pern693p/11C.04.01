@@ -16,11 +16,12 @@ h1 {
 
 h2 {
   font-size: 20px;
-
   font-weight: 500;
 }
 
 p {
+  font-size: 16px;
+  margin: 0 1em;
 }
 
 /* STUDENTLIST */
@@ -33,32 +34,58 @@ p {
 }
 
 .student {
-  border: 2px solid black;
   margin: 4px;
   padding: 10px;
   background-color: ghostwhite;
-  justify-content: space-between;
-  display: flex;
-  flex-direction: column;
+  border: 4px double #000000;
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-.student img,
-.student button {
+.student img {
   cursor: pointer;
+  height: 120px; 
+  border-radius: 25px;
+  background: white;
+  display: block;
 }
 
+.student button {
+  cursor: pointer;
+  display: inline-block;
+
+}
+
+.student button#expell.expelled-true {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+  pointer-events: none;
+}
+
+.student button#squad.in-squad-false {
+  background-color: rgb(0, 255, 0);
+}
+
+.student button#squad.in-squad-true {
+  background-color: red;
+}
 .student.hide-animation {
   opacity: 0;
 }
+
+
+/* HOUSE COLORS */
+
+.slytherin { background-color: rgb(46, 152, 32); }
+.gryffindor { background-color: #d32a2a }
+.hufflepuff { background-color: rgb(255, 255, 93); }
+.ravenclaw { background-color: rgb(39, 39, 196); }
+
 /* SORTING AND FILTERING */
 
 #selectors {
   display: flex; 
   justify-content: center; 
-   
-
 }
 
 select { 
@@ -68,17 +95,15 @@ select {
 
 .options {
   display: flex;
- 
   justify-content: space-around;
   margin: 10px 500px;
 }
 
 button {
-  font-family: 
-  font-size: 20px;
-  border: none;
-  background-color: inherit;
   color: black;
+  padding: 2px 5px;
+  background: pink;
+  -webkit-animation: none;
 }
 
 .housedropdown {
@@ -98,27 +123,39 @@ button {
 /* POPUP */
 
 #popup {
-  height: 400px;
-  width: 400px;
   position: fixed;
   top: 50px;
   left: 50px;
+  height: 80vh;;
+  width: 40vw;  
   z-index: 1;
-  background-color: rgba(209, 178, 132, 0.9);
   transition: 0.5s;
   display: none;
+}
+
+.popup_content {
+  padding: 20px;
+  background-size: auto 90%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
 }
 
 .popup_content .student {
   background-color: inherit;
 }
+
+.popup_wrapper {
+  position: relative;
+  z-index: 2;
+}
+
 #close {
   position: absolute;
   top: 20px;
   right: 45px;
   font-size: 60px;
   cursor: pointer;
-  display: none;
 }
 
 #student_amount {
@@ -132,4 +169,8 @@ button {
   display: flex;
   flex-direction: row;
   justify-content: left; 
+}
+
+p {
+  margin: 0;
 }
